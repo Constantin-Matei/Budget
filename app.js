@@ -73,7 +73,7 @@ var UIController = (function() {
       return {
         type: document.querySelector(DOMstrings.inputType).value, // Will be income or expenses
         description: document.querySelector(DOMstrings.inputDescription).value,
-        value: document.querySelector(DOMstrings.inputValue).value
+        value: parseFloat(document.querySelector(DOMstrings.inputValue).value)
       };
     },
 
@@ -101,6 +101,18 @@ var UIController = (function() {
       document.querySelector(element).insertAdjacentHTML("beforeend", newHtml);
     },
 
+    clearFields: function() {
+      var fields;
+      fields = document.querySelectorAll(
+        DOMstrings.inputDescription + ", " + DOMstrings.inputValue
+      );
+      fieldsArr = Array.prototype.slice.call(fields);
+      fieldsArr.forEach(function(current, index, array) {
+        current.value = "";
+      });
+      fieldsArr[0].focus();
+    },
+
     getDOMstrings: function() {
       return DOMstrings;
     }
@@ -120,29 +132,41 @@ var controller = (function(budgetCtrl, UICtrl) {
     });
   };
 
+  var updateBudget = function() {
+    //TODO 1. Calculate the budget
+    //TODO 2 Return the Budget
+    //TODO 3. Display the budget on the UI
+  };
+
   var ctrlAddItem = function() {
     var input, newItem;
 
     // TODO 1. Get the filed input data
 
     input = UICtrl.getinput();
-    //console.log(input);
+    if (input.description !== "" && !isNaN(input.value) && input.value > 0) {
+      //console.log(input);
 
-    // TODO 2. Add the item to the budget controller
+      // TODO 2. Add the item to the budget controller
 
-    newItem = budgetController.addItem(
-      input.type,
-      input.description,
-      input.value
-    );
+      newItem = budgetController.addItem(
+        input.type,
+        input.description,
+        input.value
+      );
 
-    // TODO 3. Add the item to the UI
+      // TODO 3. Add the item to the UI
 
-    UICtrl.addListItem(newItem, input.type);
+      UICtrl.addListItem(newItem, input.type);
 
-    // TODO 4. Calculate the budget
-    // TODO 5. Display the budget on the UI
-    //console.log("It works!");
+      //TODO 4 Clear the Fields
+      UICtrl.clearFields();
+
+      //TODO 5 Calculate and update budget
+      updateBudget();
+
+      //console.log("It works!");
+    }
   };
 
   return {
